@@ -32,7 +32,7 @@ Find your favorite tv show
 ## clone project
 ### Start the app in development mode
 ```bash
-git clone git@github.com:Atemndobs/vibes.git
+git clone git@github.com:Atemndobs/fashion-tv.git
 ```
 ### cd into project
 ```bash
