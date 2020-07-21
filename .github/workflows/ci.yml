@@ -10,7 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run a one-line script
-      - name: Run tests
-        run: |
-          echo Running  tests
-          ./vendor/bin/phpunit tests/Feature/ApiTest.php --testdox
+      - name: Running tests
+        run: ./vendor/bin/phpunit tests/Feature/ApiTest.php --testdox
+
