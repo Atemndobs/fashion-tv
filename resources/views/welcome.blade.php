@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="http://127.0.0.1:8000/">API</a>
+                    <a href="http://127.0.0.1:8000/api?q=">API</a>
                     <a href="https://github.com/Atemndobs/fashion-tv">GitHub</a>
                 </div>
             </div>

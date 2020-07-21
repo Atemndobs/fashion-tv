@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -50,6 +51,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        // Restrict the number of api calls per minute
+        if ($exception instanceof ThrottleRequestsException){
+            return response()->json([
+                "success" => false,
+                "errors" => [
+                    "message" => "Too many requests. Please wait a minute"
+                ]
+            ]);
+        }
         return parent::render($request, $exception);
     }
 }
