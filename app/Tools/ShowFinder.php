@@ -6,6 +6,7 @@ namespace App\Tools;
 
 
 use GuzzleHttp\Client;
+use http\Message;
 
 /**
  * Class ShowFinder
@@ -34,6 +35,7 @@ class ShowFinder
     /**
      * @param string $title
      * @return array
+     * fetch shows for the TVMaze API
      */
     public function findShow(string $title): array
     {
@@ -42,16 +44,28 @@ class ShowFinder
         }
         $url = self::BASEURL . "?q={$title}";
 
+
+
         try {
-            $req = $this->client->get($url);
-            if ($req->getStatusCode() == 200) {
-                $response = json_decode($req->getBody()->getContents());
+            $request = $this->client->get($url);
+
+
+            if ($request->getStatusCode() == 200) {
+                $response = json_decode($request->getBody()->getContents());
+                if (empty($response)){
+                    return [
+                        "success" => false,
+                        "code" => 500,
+                        "message" => 'Sorry, we cant find the tv show named : '.$title
+                    ];
+                }
                 return $this->processSuccessResponse($response, $title);
             } else {
+
                 return [
                     "success" => false,
-                    "code" => $req->getStatusCode(),
-                    "message" => $req->getReasonPhrase()
+                    "code" => $request->getStatusCode(),
+                    "message" => $request->getReasonPhrase()
                 ];
             }
         } catch (\Exception $e) {
@@ -67,12 +81,14 @@ class ShowFinder
      * @param $response
      * @param $title
      * @return array
+     *
      */
     private function processSuccessResponse($response, $title) : array
     {
         $matches = [];
         $suggestions = [];
         list($show, $matches) = $this->fetchShows($response, $title, $matches);
+
 
         if (empty($matches)){
             foreach ($response as $show) {
@@ -106,6 +122,7 @@ class ShowFinder
                 $matches[] = $show;
             }
         }
+
         return [$show, $matches];
     }
 
