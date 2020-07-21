@@ -36,7 +36,7 @@ git clone git@github.com:Atemndobs/fashion-tv.git
 ```
 ### cd into project
 ```bash
-cd vibes
+cd fashion-tv
 ```
 
 ### install the composer packages
