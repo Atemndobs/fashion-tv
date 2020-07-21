@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 
+use PHPUnit\Framework\SkippedTest;
 use Tests\TestCase;
 
 /**
@@ -32,7 +33,7 @@ class ApiTest extends TestCase
     }
 
     /**
-     * HInt user If query parameter is incomplete
+     * Hint user If query parameter is incomplete
      */
     public function testValidQueryParameter()
     {
