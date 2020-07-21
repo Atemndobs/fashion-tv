@@ -11,5 +11,6 @@ jobs:
       - uses: actions/checkout@v1
       - name: Run a one-line script
       - name: Running tests
-        run: ./vendor/bin/phpunit tests/Feature/ApiTest.php --testdox
+        run: |
+        sh ./vendor/bin/phpunit tests/Feature/ApiTest.php --testdox
 
