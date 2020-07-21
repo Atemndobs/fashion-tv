@@ -25,6 +25,7 @@ class ApiTest extends TestCase
 
     /**
      * Server should respond with some error message if query parameter is poorly formatted
+     * @group incomplete
      */
     public function testBadRequest()
     {
@@ -34,6 +35,7 @@ class ApiTest extends TestCase
 
     /**
      * Hint user If query parameter is incomplete
+     * @group incomplete
      */
     public function testValidQueryParameter()
     {
@@ -45,6 +47,7 @@ class ApiTest extends TestCase
     /**
      * test against typo tolerance from TVMaze API
      * eg deadwood should  return Deadwood
+     * @group incomplete
      */
     public function testSearchReturnsExactMatch()
     {
@@ -66,6 +69,7 @@ class ApiTest extends TestCase
     /**
      * Tests if non matching search parameter returns suggestions
      * eg prison should return adn aray of simmilar show names like   [Prison Break , ...]
+     * @group incomplete
      */
     public function testSearchNonExactMatchReturnSuggestion()
     {
@@ -93,6 +97,7 @@ class ApiTest extends TestCase
     /**
      * test against case sensitive  query parameter (tv shoe name) from TVMaze API
      * eg deadwood should return Deadwood or deadwood
+     * @group incomplete
      */
     public function testSearchNonCaseSensitive()
     {
