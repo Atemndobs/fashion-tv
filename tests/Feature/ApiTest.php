@@ -25,12 +25,11 @@ class ApiTest extends TestCase
 
     /**
      * Server should respond with some error message if query parameter is poorly formatted
-     * @group incomplete
      */
     public function testBadRequest()
     {
-        $respose = $this->get('?q=%%Ae**m%');
-        $respose->assertStatus(400);
+        $respose = $this->get('/api?q=%%Ae**m%');
+        $respose->assertStatus(500);
     }
 
     /**
