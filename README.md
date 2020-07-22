@@ -68,9 +68,23 @@ make test
 make api
 ```
 
+## REST API
+
+[local api](localhost:8000/api)
+
+### search tv show by giving title as query parameter
+e.g search for outlander
+localhost:8000/api?q=outlander
+
+[outlander](http://localhost:8000/api?q=outlander)
+
+## To-do
+
+- Dockerise application to ease installation on different environment
+- Configure application for deployment / creating CI/CD pipeline for automated deployment and testing
+- Generate api documentation e.g using [apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator)
 
 ## WIP
-- Create tests
+- Update tests
 - create tools / helpers
-- Create Controller
 - Update docs

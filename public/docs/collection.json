@@ -1,0 +1,45 @@
+{
+    "variables": [],
+    "info": {
+        "name": "Laravel API",
+        "_postman_id": "5329c3a4-6f35-49bf-a7e0-0c33c8e9dc53",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "general",
+            "description": "",
+            "item": [
+                {
+                    "name": "api",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        }
+    ]
+}
