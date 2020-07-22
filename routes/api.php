@@ -3,4 +3,4 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'SearchController@searchShow')->middleware('throttle:60,1');
+Route::get('/', 'SearchController@searchShow')->middleware('throttle:5,1');

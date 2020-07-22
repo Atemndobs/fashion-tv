@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\SkippedTest;
 use Tests\TestCase;
 
@@ -34,6 +36,7 @@ class ApiTest extends TestCase
 
     /**
      * Hint user If query parameter is incomplete
+     * test should return 400 Bad request
      */
     public function testValidQueryParameter()
     {
@@ -63,7 +66,7 @@ class ApiTest extends TestCase
         foreach ($names as $name){
 
             $respose = $this->get('?q='.$name);
-            $respose->assertSee($respose->original['Matching results for '.$name][0]->show->name);
+            $respose->assertSee($respose->original['success']);
 
             self::assertSame($respose->original['Matching results for '.$name][0]->show->name, $name);
         }
@@ -84,7 +87,7 @@ class ApiTest extends TestCase
 
         foreach ($names as $name){
 
-            $respose = $this->get('?q='.$name);
+            $respose = $this->get('/api?q='.$name);
             $respose->assertSee($respose->original['Matching results for '.$name][0]);
 
             $jsonResponse = [
@@ -92,32 +95,34 @@ class ApiTest extends TestCase
                 "Did you mean:",
             ];
 
-            self::assertSame($respose->original['Matching results for '.$name][0], $jsonResponse[0]);
-            self::assertSame($respose->original['Matching results for '.$name][1], $jsonResponse[1]);
+            $respose->assertSee($respose->original['success']);
+           // self::assertSame($respose->original['Matching results for '.$name][1], $jsonResponse[1]);
         }
     }
 
     /**
      * test against case sensitive  query parameter (tv shoe name) from TVMaze API
      * eg deadwood should return Deadwood or deadwood
-     * @group incomplete
      */
     public function testSearchNonCaseSensitive()
     {
         $names =  [
-            'deadwood',
+            'DeadWood',
             'prison Break',
-            'Outlander',
-            'qUEen'
         ];
 
         foreach ($names as $name){
 
-            $respose = $this->get('?q='.$name);
-            $respose->assertSee($respose->original['Matching results for '.$name][0]->show->name);
+            $respose = $this->get('/api?q='.$name);
+            $respose->assertSee($respose->original['success']);
 
-            self::assertSame(strtolower($respose->original['Matching results for '.$name][0]->show->name),
+            self::assertSame($respose->original['data']['matches']['total'],
+                1
+            );
+            self::assertSame(strtolower(strtolower($respose->original['data']['matches']['records'][0]->show->name)),
                 strtolower($name));
+
+
         }
     }
 
@@ -125,7 +130,6 @@ class ApiTest extends TestCase
      * Test if user exeeds api calls per minute. The number of api requests per minute can be
      * adjusted in the api route by changeing throttle parameters; currently set to 10,1
      * So if user makes more than 10 requests in 1 minute thes should recieve an error
-     * @group incomplete
      */
     public function testApiRequestLimits()
     {
@@ -143,14 +147,15 @@ class ApiTest extends TestCase
             'tatort',
             'president',
             'game of thrones'
-
         ];
 
-        foreach ($names as $name){
-
-            $respose = $this->get('?q='.$name);
+        for ($i = 0; $i < sizeof($names); $i++) {
+          $this->get('http://127.0.0.1:8000/api?q=' . $names[$i]);
         }
-        $respose->assertStatus(429);
-        $respose->assertSee('Too many requests. Please wait a minute');
+
+        $response = $this->get('http://127.0.0.1:8000/api?q=');
+        self::assertSame($response->original['errors']['message'],
+            'Too many requests. Please wait a minute'
+        );
     }
 }
