@@ -21,8 +21,8 @@ class ApiTest extends TestCase
      */
     public function testApiRoute()
     {
-        $respose = $this->get('/');
-        $respose->assertStatus(200);
+        $response = $this->get('/');
+        $response->assertStatus(200);
     }
 
     /**
@@ -30,8 +30,8 @@ class ApiTest extends TestCase
      */
     public function testBadRequest()
     {
-        $respose = $this->get('/api?q=%%Ae**m%');
-        $respose->assertStatus(400);
+        $response = $this->get('/api?q=%%Ae**m%');
+        $response->assertStatus(400);
     }
 
     /**
@@ -40,11 +40,11 @@ class ApiTest extends TestCase
      */
     public function testValidQueryParameter()
     {
-        $respose = $this->get('/api?q');
+        $response = $this->get('/api?q');
 
-        $respose->assertStatus(400);
-        self::assertSame($respose->original['success'], false);
-        self::assertSame($respose->original['errors']['message'],
+        $response->assertStatus(400);
+        self::assertSame($response->original['success'], false);
+        self::assertSame($response->original['errors']['message'],
             'No tv show requested. Please make your url looks like this : http://localhost:8000/api?q=[show name]'
         );
 
@@ -53,7 +53,6 @@ class ApiTest extends TestCase
     /**
      * test against typo tolerance from TVMaze API
      * eg deadwood should  return Deadwood
-     * @group incomplete
      */
     public function testSearchReturnsExactMatch()
     {
@@ -65,38 +64,42 @@ class ApiTest extends TestCase
 
         foreach ($names as $name){
 
-            $respose = $this->get('?q='.$name);
-            $respose->assertSee($respose->original['success']);
+            $response = $this->get('/api?q='.$name);
 
-            self::assertSame($respose->original['Matching results for '.$name][0]->show->name, $name);
+            self::assertSame($response->original['success'], true);
+
+            self::assertSame($response->original['data']['matches']['total'],
+                1
+            );
+            self::assertSame($response->original['data']['suggestions']['total'],
+                0
+            );
+            self::assertSame($response->original['data']['matches']['records'][0]->show->name, $name);
         }
     }
 
     /**
      * Tests if non matching search parameter returns suggestions
      * eg prison should return adn aray of simmilar show names like   [Prison Break , ...]
-     * @group incomplete
      */
     public function testSearchNonExactMatchReturnSuggestion()
     {
         $names =  [
             'Deadwoods',
-            'Prison Breakers',
-            'Trump'
+            'Breking dad',
+            'pison Brek'
         ];
 
         foreach ($names as $name){
 
-            $respose = $this->get('/api?q='.$name);
-            $respose->assertSee($respose->original['Matching results for '.$name][0]);
+            $response = $this->get('/api?q='.$name);
+            self::assertSame($response->original['success'], true);
 
-            $jsonResponse = [
-                "Sorry we could not find any show named ".$name,
-                "Did you mean:",
-            ];
+            self::assertSame($response->original['data']['matches']['total'],
+                0
+            );
 
-            $respose->assertSee($respose->original['success']);
-           // self::assertSame($respose->original['Matching results for '.$name][1], $jsonResponse[1]);
+            self::assertLessThanOrEqual($response->original['data']['suggestions']['total'] , 1);
         }
     }
 
@@ -113,16 +116,15 @@ class ApiTest extends TestCase
 
         foreach ($names as $name){
 
-            $respose = $this->get('/api?q='.$name);
-            $respose->assertSee($respose->original['success']);
+            $response = $this->get('/api?q='.$name);
 
-            self::assertSame($respose->original['data']['matches']['total'],
+            self::assertSame($response->original['success'], true);
+
+            self::assertSame($response->original['data']['matches']['total'],
                 1
             );
-            self::assertSame(strtolower(strtolower($respose->original['data']['matches']['records'][0]->show->name)),
+            self::assertSame(strtolower($response->original['data']['matches']['records'][0]->show->name),
                 strtolower($name));
-
-
         }
     }
 
