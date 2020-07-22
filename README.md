@@ -2,6 +2,7 @@ fashin-tv
 ======================
 
 Find your favorite tv show
+An API allowing you to search for TV shows by their name, using a simple query string.
 
 # Table of Contents
 
