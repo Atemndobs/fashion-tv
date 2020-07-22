@@ -84,8 +84,6 @@ localhost:8000/api?q=outlander
 - Dockerise application to ease installation on different environment
 - Configure application for deployment / creating CI/CD pipeline for automated deployment 
 - Generate api documentation e.g using [apidoc-generator](https://github.com/mpociot/laravel-apidoc-generator)
+- Clean up project and remove unused files
 
-## WIP
-- Update tests
-- Update docs
-- updating CI/CD
+
