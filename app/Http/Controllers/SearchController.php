@@ -36,6 +36,8 @@ class SearchController extends Controller
 
         $response = $finder->findShow($title);
 
+       // dd($response);
+
         // if request failed
         if(!$response['success']){
             return response()->json([

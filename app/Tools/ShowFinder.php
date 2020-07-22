@@ -6,6 +6,7 @@ namespace App\Tools;
 
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use http\Message;
 
 /**
@@ -44,7 +45,7 @@ class ShowFinder
         }
         $url = self::BASEURL . "?q={$title}";
 
-
+      //  dd($this->client->get($url)->get);
 
         try {
             $request = $this->client->get($url);
@@ -54,9 +55,11 @@ class ShowFinder
                 $response = json_decode($request->getBody()->getContents());
                 if (empty($response)){
                     return [
-                        "success" => false,
-                        "code" => 500,
-                        "message" => 'Sorry, we cant find the tv show named : '.$title
+                        "success" => true,
+                        "total_matches" => count($response),
+                        "matches" => 'No matches for '.$title,
+                        "total_suggestions" => count($response),
+                        "suggestions" => 'No suggestions for '.$title,
                     ];
                 }
                 return $this->processSuccessResponse($response, $title);
@@ -68,10 +71,11 @@ class ShowFinder
                     "message" => $request->getReasonPhrase()
                 ];
             }
-        } catch (\Exception $e) {
+        } catch (ClientException $e) {
+
             return [
                 "success" => false,
-                "code" => 500,
+                "code" => 400,
                 "message" => $e->getMessage()
             ];
         }

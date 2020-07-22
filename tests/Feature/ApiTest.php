@@ -29,18 +29,22 @@ class ApiTest extends TestCase
     public function testBadRequest()
     {
         $respose = $this->get('/api?q=%%Ae**m%');
-        $respose->assertStatus(500);
+        $respose->assertStatus(400);
     }
 
     /**
      * Hint user If query parameter is incomplete
-     * @group incomplete
      */
     public function testValidQueryParameter()
     {
-        $respose = $this->get('?q');
+        $respose = $this->get('/api?q');
 
-        $respose->assertSee('');
+        $respose->assertStatus(400);
+        self::assertSame($respose->original['success'], false);
+        self::assertSame($respose->original['errors']['message'],
+            'No tv show requested. Please make your url looks like this : http://localhost:8000/api?q=[show name]'
+        );
+
     }
 
     /**
@@ -115,5 +119,38 @@ class ApiTest extends TestCase
             self::assertSame(strtolower($respose->original['Matching results for '.$name][0]->show->name),
                 strtolower($name));
         }
+    }
+
+    /**
+     * Test if user exeeds api calls per minute. The number of api requests per minute can be
+     * adjusted in the api route by changeing throttle parameters; currently set to 10,1
+     * So if user makes more than 10 requests in 1 minute thes should recieve an error
+     * @group incomplete
+     */
+    public function testApiRequestLimits()
+    {
+        $names =  [
+            'Deadwood',
+            'Prison Break',
+            'Outlander',
+            'Admin',
+            'Thrump',
+            'Corona',
+            'Queen',
+            'Breaking Bad',
+            'Suits',
+            'freud',
+            'tatort',
+            'president',
+            'game of thrones'
+
+        ];
+
+        foreach ($names as $name){
+
+            $respose = $this->get('?q='.$name);
+        }
+        $respose->assertStatus(429);
+        $respose->assertSee('Too many requests. Please wait a minute');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Exceptions;
 
@@ -6,6 +7,10 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Throwable;
 
+/**
+ * Class Handler
+ * @package App\Exceptions
+ */
 class Handler extends ExceptionHandler
 {
     /**
